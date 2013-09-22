@@ -1,0 +1,16 @@
+S1\ab_mcC.txt
+S1\ab_mcI.txt
+S1\ab_miC.txt
+S1\ab_miI.txt
+S2\AH_mcC.txt
+S2\AH_mcI.txt
+S2\AH_miC.txt
+S2\AH_miI.txt
+S3\ah_mcC.txt
+S3\ah_mcI.txt
+S3\ah_miC.txt
+S3\ah_miI.txt
+S4\AH2_mcC.txt
+S4\AH2_mcI.txt
+S4\AH2_miC.txt
+S4\AH2_miI.txt
