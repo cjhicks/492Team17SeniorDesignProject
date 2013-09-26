@@ -102,10 +102,16 @@ function selectInputDirectoryBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to selectInputDirectoryBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+% declare global variables
 global inputDirName;
 global inputDirPath;
+
+% get input directory file
 [inputDirName, inputDirPath] = uigetfile('.txt', 'Select the Input Directory File');
-if(inputDirName ~= 0) 
+
+% update file name string
+if(~isempty(inputDirName)) 
     set(handles.inputDirectoryText, 'String', inputDirName);
    % dataset = doBuildDataset(inputDirPath, inputDirName);
 end
@@ -148,6 +154,8 @@ function numberOfSubjectsText_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of numberOfSubjectsText as text
 %        str2double(get(hObject,'String')) returns contents of numberOfSubjectsText as a double
+global numberOfSubjects;
+numberOfSubjects = str2double(get(hObject, 'String'));
 
 
 % --- Executes during object creation, after setting all properties.
@@ -215,6 +223,17 @@ function selectElectrodeFileButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% declare global variables
+global electrodeFileName;
+global electrodeFilePath;
+
+% get electrode file
+[electrodeFileName, electrodeFilePath] = uigetfile('.mat', 'Select the Electrode File');
+
+% update file name string
+if(~isempty(electrodeFileName)) 
+    set(handles.ElectrodeFileText, 'String', electrodeFileName);
+end
 
 % --- Executes on button press in selectOutputFileButton.
 function selectOutputFileButton_Callback(hObject, eventdata, handles)
@@ -278,5 +297,23 @@ global inputDirName;
 global inputDirPath;
 
 dataset = doBuildDataset(inputDirPath, inputDirName);
-uisave('dataset');
+
+[successfulValidation] = validateDatasetInput();
+if(successfulValidation == 1)
+    uisave('dataset');
+end
+
+% validation method for building a dataset
+function [success] = validateDatasetInput()
+    global numberOfSubjects;
+    
+    if(isnan(numberOfSubjects))
+        errordlg('Number Of Subjects is not valid');
+        success = 0;
+    else
+        success = 1; 
+    end
+
+
+
 
