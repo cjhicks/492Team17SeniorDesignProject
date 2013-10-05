@@ -79,6 +79,18 @@ function SelectDataSetButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% declare global variables
+global datasetFileName;
+global datasetFilePath;
+
+% get electrode file
+[datasetFileName, datasetFilePath] = uigetfile('.mat', 'Select the Electrode File');
+
+% update file name string
+if(~isempty(datasetFileName)) 
+    set(handles.InputDatasetText, 'String', datasetFileName);
+end
+
 
 
 function InputDatasetText_Callback(hObject, eventdata, handles)

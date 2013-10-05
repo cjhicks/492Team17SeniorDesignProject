@@ -22,7 +22,7 @@ function varargout = buildDataset(varargin)
 
 % Edit the above text to modify the response to help buildDataset
 
-% Last Modified by GUIDE v2.5 15-Sep-2013 07:49:44
+% Last Modified by GUIDE v2.5 05-Oct-2013 14:21:12
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -72,6 +72,17 @@ function varargout = buildDataset_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
+    global numberOfSubjects;
+    global numberOfConditions;
+    global sampleRate;
+    global baseline;
+    global electrodeFileName;
+    numberOfSubjects = -1;
+    numberOfConditions = -1;
+    sampleRate = -1;
+    baseline = 1/0;
+    electrodeFileName = 0;
+    
 
 
 % --- Executes on selection change in inputDirectoryText.
@@ -111,14 +122,14 @@ global inputDirPath;
 [inputDirName, inputDirPath] = uigetfile('.txt', 'Select the Input Directory File');
 
 % update file name string
-if(~isempty(inputDirName)) 
+if(~isequal(inputDirName,0)) 
     set(handles.inputDirectoryText, 'String', inputDirName);
    % dataset = doBuildDataset(inputDirPath, inputDirName);
 end
 
-% --- Executes on button press in pushbutton2.
-function pushbutton2_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton2 (see GCBO)
+% --- Executes on button press in inputConditionNamesText.
+function inputConditionNamesText_Callback(hObject, eventdata, handles)
+% hObject    handle to inputConditionNamesText (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -131,6 +142,8 @@ function numberOfConditionsText_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of numberOfConditionsText as text
 %        str2double(get(hObject,'String')) returns contents of numberOfConditionsText as a double
+global numberOfConditions;
+numberOfConditions = str2double(get(hObject, 'String'));
 
 
 % --- Executes during object creation, after setting all properties.
@@ -179,6 +192,8 @@ function sampleRateText_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of sampleRateText as text
 %        str2double(get(hObject,'String')) returns contents of sampleRateText as a double
+global sampleRate;
+sampleRate = str2double(get(hObject, 'String'));
 
 
 % --- Executes during object creation, after setting all properties.
@@ -202,6 +217,8 @@ function baselineText_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of baselineText as text
 %        str2double(get(hObject,'String')) returns contents of baselineText as a double
+global baseline;
+baseline = str2double(get(hObject, 'String'));
 
 
 % --- Executes during object creation, after setting all properties.
@@ -226,13 +243,15 @@ function selectElectrodeFileButton_Callback(hObject, eventdata, handles)
 % declare global variables
 global electrodeFileName;
 global electrodeFilePath;
+global electrodeData;
 
 % get electrode file
 [electrodeFileName, electrodeFilePath] = uigetfile('.mat', 'Select the Electrode File');
 
 % update file name string
-if(~isempty(electrodeFileName)) 
+if(~isequal(electrodeFileName,0)) 
     set(handles.ElectrodeFileText, 'String', electrodeFileName);
+    electrodeData = load(strcat(electrodeFilePath, electrodeFileName));
 end
 
 % --- Executes on button press in selectOutputFileButton.
@@ -295,25 +314,46 @@ function BuildButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global inputDirName;
 global inputDirPath;
+global numberOfSubjects;
+global numberOfConditions;
+global sampleRate;
+global baseline;
+global electrodeData;
 
-dataset = doBuildDataset(inputDirPath, inputDirName);
-
-[successfulValidation] = validateDatasetInput();
+[successfulValidation] = validateTextInput();
 if(successfulValidation == 1)
-    uisave('dataset');
+    [dataset, count] = doBuildDataset(inputDirPath, inputDirName);
+    
+    if(count == (numberOfSubjects*numberOfConditions))
+        uisave({'dataset', 'numberOfSubjects', 'numberOfConditions', 'sampleRate', 'baseline', 'electrodeData'});
+    else
+        errordlg('Number of Subjects and Conditions does not match total files in dataset!');
+    end
 end
 
 % validation method for building a dataset
-function [success] = validateDatasetInput()
+function [success] = validateTextInput()
     global numberOfSubjects;
+    global numberOfConditions;
+    global sampleRate;
+    global baseline;
+    global electrodeFileName;
     
-    if(isnan(numberOfSubjects))
-        errordlg('Number Of Subjects is not valid');
+    if(isnan(numberOfSubjects) || numberOfSubjects < 1)
+        errordlg('Number of Subjects is not valid');
+        success = 0;
+    elseif(isnan(numberOfConditions) || numberOfConditions < 1)
+        errordlg('Number of Conditions is not valid');
+        success = 0;
+    elseif(isnan(sampleRate) || sampleRate < 1)
+        errordlg('Sample Rate is not valid');
+        success = 0;
+    elseif(isinf(baseline) || isnan(baseline))
+        errordlg('Baseline is not valid');
+        success = 0;
+    elseif(isequal(electrodeFileName,0))
+        errordlg('Please select an Electrode File');
         success = 0;
     else
         success = 1; 
     end
-
-
-
-
