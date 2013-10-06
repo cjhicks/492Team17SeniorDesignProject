@@ -77,11 +77,13 @@ varargout{1} = handles.output;
     global sampleRate;
     global baseline;
     global electrodeFileName;
+    global ConditionNames;
     numberOfSubjects = -1;
     numberOfConditions = -1;
     sampleRate = -1;
     baseline = 1/0;
     electrodeFileName = 0;
+    ConditionNames = '';
     
 
 
@@ -132,7 +134,8 @@ function inputConditionNamesText_Callback(hObject, eventdata, handles)
 % hObject    handle to inputConditionNamesText (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+global ConditionNames;
+ConditionNames = cellstr(get(hObject, 'String'));
 
 
 function numberOfConditionsText_Callback(hObject, eventdata, handles)
@@ -252,6 +255,8 @@ global electrodeData;
 if(~isequal(electrodeFileName,0)) 
     set(handles.ElectrodeFileText, 'String', electrodeFileName);
     electrodeData = load(strcat(electrodeFilePath, electrodeFileName));
+    
+    electrodeData = electrodeData.chanlocs;
 end
 
 % --- Executes on button press in selectOutputFileButton.
@@ -319,15 +324,24 @@ global numberOfConditions;
 global sampleRate;
 global baseline;
 global electrodeData;
+global ConditionNames;
 
 [successfulValidation] = validateTextInput();
 if(successfulValidation == 1)
     [dataset, count] = doBuildDataset(inputDirPath, inputDirName);
     
-    if(count == (numberOfSubjects*numberOfConditions))
-        uisave({'dataset', 'numberOfSubjects', 'numberOfConditions', 'sampleRate', 'baseline', 'electrodeData'});
-    else
+    % if number of subjects/conditions doesn't coordinate with dataset,
+    % throw error message
+    if(count ~= (numberOfSubjects*numberOfConditions)) 
         errordlg('Number of Subjects and Conditions does not match total files in dataset!');
+        
+    % if number of conditions don't match, throw error message
+    elseif(numel(ConditionNames) ~= numberOfConditions)
+        errordlg('Number of Conditions doesn''t match the total number of Condition Names!');
+        
+    % else, save it all
+    else
+        uisave({'dataset', 'numberOfSubjects', 'numberOfConditions', 'sampleRate', 'baseline', 'electrodeData', 'ConditionNames'});
     end
 end
 
