@@ -254,8 +254,8 @@ global electrodeData;
 % update file name string
 if(~isequal(electrodeFileName,0)) 
     set(handles.ElectrodeFileText, 'String', electrodeFileName);
-    electrodeData = load(strcat(electrodeFilePath, electrodeFileName));
     
+    electrodeData = load(strcat(electrodeFilePath, electrodeFileName));
     electrodeData = electrodeData.chanlocs;
 end
 

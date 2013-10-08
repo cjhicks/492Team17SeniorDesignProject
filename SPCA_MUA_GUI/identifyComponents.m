@@ -71,6 +71,12 @@ function varargout = identifyComponents_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
+global datasetData;
+global epochStart;
+global epochEnd;
+datasetData = -1;
+epochStart = 1/0;
+epochEnd = 1/0;
 
 
 % --- Executes on button press in SelectDataSetButton.
@@ -82,6 +88,7 @@ function SelectDataSetButton_Callback(hObject, eventdata, handles)
 % declare global variables
 global datasetFileName;
 global datasetFilePath;
+global datasetData;
 
 % get electrode file
 [datasetFileName, datasetFilePath] = uigetfile('.mat', 'Select the Electrode File');
@@ -89,6 +96,10 @@ global datasetFilePath;
 % update file name string
 if(~isempty(datasetFileName)) 
     set(handles.InputDatasetText, 'String', datasetFileName);
+    
+    datasetData  = load(strcat(datasetFilePath, datasetFileName));
+    
+    set(handles.AllElectrodesList, 'String', datasetData.ConditionNames); %TODO, this needs fixed
 end
 
 
@@ -123,6 +134,8 @@ function EpochStartText_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of EpochStartText as text
 %        str2double(get(hObject,'String')) returns contents of EpochStartText as a double
+global epochStart;
+epochStart = str2double(get(hObject, 'String'));
 
 
 % --- Executes during object creation, after setting all properties.
@@ -146,6 +159,8 @@ function EpochEndText_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of EpochEndText as text
 %        str2double(get(hObject,'String')) returns contents of EpochEndText as a double
+global epochEnd;
+epochEnd = str2double(get(hObject, 'String'));
 
 
 % --- Executes during object creation, after setting all properties.
@@ -227,6 +242,14 @@ function RunParallelAnalysisButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% TODO: temp code
+global datasetData;
+
+[numberOfSpatialComponents] = doParallelAnalysis(datasetData.dataset);
+set(handles.NumberSpatialComponentsText, 'String', numberOfSpatialComponents);
+
+
+
 
 % --- Executes on button press in RunScreePlotButton.
 function RunScreePlotButton_Callback(hObject, eventdata, handles)
@@ -263,3 +286,7 @@ function RunSpatialPCAButton_Callback(hObject, eventdata, handles)
 % hObject    handle to RunSpatialPCAButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global datasetData;
+[STPCAresults]=STPCA(datasetData.dataset,datasetData.numberOfSubjects,datasetData.numberOfConditions,0);
+STPCAresults = '';
+
