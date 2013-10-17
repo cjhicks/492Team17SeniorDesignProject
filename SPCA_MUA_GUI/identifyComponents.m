@@ -99,7 +99,10 @@ if(~isempty(datasetFileName))
     
     datasetData  = load(strcat(datasetFilePath, datasetFileName));
     
-    set(handles.AllElectrodesList, 'String', datasetData.ConditionNames); %TODO, this needs fixed
+    for i=1:length(datasetData.electrodeData)
+        str(i) = cellstr(datasetData.electrodeData(i).labels);
+    end
+    set(handles.AllElectrodesList, 'String', str); %TODO, this needs fixed
 end
 
 
@@ -287,6 +290,54 @@ function RunSpatialPCAButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global datasetData;
-[STPCAresults]=STPCA(datasetData.dataset,datasetData.numberOfSubjects,datasetData.numberOfConditions,0);
-STPCAresults = '';
+global epochStart;
+global epochEnd;
+
+pcadata = struct;
+timeSpan = (epochEnd - epochStart)*datasetData.sampleRate;
+pcadata.data = datasetData.dataset;
+sections = datasetData.numberOfSubjects*datasetData.numberOfConditions;
+rowsPerSection = size(pcadata.data, 1)/(sections);
+
+% cut off beginning rows before baseline, do matrix stuff
+if( datasetData.baseline < 0)
+    
+    % THIS LINE NEEDS TESTING
+    offset = round((0-datasetData.baseline/1000)*datasetData.sampleRate); % gets x number of rows offset from baseline
+    
+    data=[];
+    for i=1:sections
+        startRow = ((i-1)*rowsPerSection) + offset + 1;
+        endRow = (i*rowsPerSection);
+        data=cat(1, data, pcadata.data(startRow:endRow,:));
+    end
+    
+    pcadata.data = data;
+    rowsPerSection = size(pcadata.data, 1)/(sections);
+end
+
+% remove all rows after epochEnd, do matrix stuff
+if(rowsPerSection > timeSpan)
+    data=[];
+    for i=1:sections
+        startRow = ((i-1)*rowsPerSection) + 1;
+        endRow = (startRow + timeSpan);
+        tempData = pcadata.data(startRow:endRow, :);
+        data=cat(1, data, tempData);
+    end
+    
+    pcadata.data = data;
+end
+
+% remove unused columns (channels), i guess do a for for each column to see
+% if before channel is in after channel. If not, remove it, then at end
+% truncate extra
+len = length(datasetData.electrodeData);
+temp = pcadata.data(:,1:len);
+
+pcadata.time =  epochStart:(1/datasetData.sampleRate):epochEnd;
+
+
+[STPCAresults]=STPCA(pcadata,datasetData.numberOfSubjects,datasetData.numberOfConditions,0);
+uisave('STPCAresults');
 
