@@ -22,7 +22,7 @@ function varargout = runMua(varargin)
 
 % Edit the above text to modify the response to help runMua
 
-% Last Modified by GUIDE v2.5 17-Oct-2013 11:20:50
+% Last Modified by GUIDE v2.5 19-Oct-2013 13:23:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -73,19 +73,19 @@ function varargout = runMua_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on selection change in InputFile_ListBox.
-function InputFile_ListBox_Callback(hObject, eventdata, handles)
-% hObject    handle to InputFile_ListBox (see GCBO)
+% --- Executes on selection change in InputFile_EditText.
+function InputFile_EditText_Callback(hObject, eventdata, handles)
+% hObject    handle to InputFile_EditText (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns InputFile_ListBox contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from InputFile_ListBox
+% Hints: contents = cellstr(get(hObject,'String')) returns InputFile_EditText contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from InputFile_EditText
 
 
 % --- Executes during object creation, after setting all properties.
-function InputFile_ListBox_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to InputFile_ListBox (see GCBO)
+function InputFile_EditText_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to InputFile_EditText (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -127,18 +127,18 @@ end
 
 
 
-function IV1Label_Input_Callback(hObject, eventdata, handles)
-% hObject    handle to IV1Label_Input (see GCBO)
+function IV1Label_Edit_Callback(hObject, eventdata, handles)
+% hObject    handle to IV1Label_Edit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of IV1Label_Input as text
-%        str2double(get(hObject,'String')) returns contents of IV1Label_Input as a double
+% Hints: get(hObject,'String') returns contents of IV1Label_Edit as text
+%        str2double(get(hObject,'String')) returns contents of IV1Label_Edit as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function IV1Label_Input_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to IV1Label_Input (see GCBO)
+function IV1Label_Edit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to IV1Label_Edit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -173,18 +173,18 @@ end
 
 
 
-function IV2Label_Input_Callback(hObject, eventdata, handles)
-% hObject    handle to IV2Label_Input (see GCBO)
+function IV2Label_Edit_Callback(hObject, eventdata, handles)
+% hObject    handle to IV2Label_Edit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of IV2Label_Input as text
-%        str2double(get(hObject,'String')) returns contents of IV2Label_Input as a double
+% Hints: get(hObject,'String') returns contents of IV2Label_Edit as text
+%        str2double(get(hObject,'String')) returns contents of IV2Label_Edit as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function IV2Label_Input_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to IV2Label_Input (see GCBO)
+function IV2Label_Edit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to IV2Label_Edit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -269,3 +269,141 @@ function Run_button_Callback(hObject, eventdata, handles)
 % hObject    handle to Run_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+
+function IV_1_Level_1_Label_Edit_Text_Callback(hObject, eventdata, handles)
+% hObject    handle to IV_1_Level_1_Label_Edit_Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of IV_1_Level_1_Label_Edit_Text as text
+%        str2double(get(hObject,'String')) returns contents of IV_1_Level_1_Label_Edit_Text as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function IV_1_Level_1_Label_Edit_Text_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to IV_1_Level_1_Label_Edit_Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function IV_1_Level_2_Label_Edit_Text_Callback(hObject, eventdata, handles)
+% hObject    handle to IV_1_Level_2_Label_Edit_Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of IV_1_Level_2_Label_Edit_Text as text
+%        str2double(get(hObject,'String')) returns contents of IV_1_Level_2_Label_Edit_Text as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function IV_1_Level_2_Label_Edit_Text_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to IV_1_Level_2_Label_Edit_Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function IV_1_Level_3_Label_Edit_Text_Callback(hObject, eventdata, handles)
+% hObject    handle to IV_1_Level_3_Label_Edit_Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of IV_1_Level_3_Label_Edit_Text as text
+%        str2double(get(hObject,'String')) returns contents of IV_1_Level_3_Label_Edit_Text as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function IV_1_Level_3_Label_Edit_Text_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to IV_1_Level_3_Label_Edit_Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function IV_2_Level_1_Label_Edit_Text_Callback(hObject, eventdata, handles)
+% hObject    handle to IV_2_Level_1_Label_Edit_Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of IV_2_Level_1_Label_Edit_Text as text
+%        str2double(get(hObject,'String')) returns contents of IV_2_Level_1_Label_Edit_Text as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function IV_2_Level_1_Label_Edit_Text_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to IV_2_Level_1_Label_Edit_Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function IV_2_Level_2_Label_Edit_Text_Callback(hObject, eventdata, handles)
+% hObject    handle to IV_2_Level_2_Label_Edit_Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of IV_2_Level_2_Label_Edit_Text as text
+%        str2double(get(hObject,'String')) returns contents of IV_2_Level_2_Label_Edit_Text as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function IV_2_Level_2_Label_Edit_Text_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to IV_2_Level_2_Label_Edit_Text (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function pValueEditText_Callback(hObject, eventdata, handles)
+% hObject    handle to pValueEditText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of pValueEditText as text
+%        str2double(get(hObject,'String')) returns contents of pValueEditText as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function pValueEditText_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to pValueEditText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

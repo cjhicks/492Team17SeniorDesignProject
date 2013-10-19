@@ -332,8 +332,8 @@ end
 % remove unused columns (channels), i guess do a for for each column to see
 % if before channel is in after channel. If not, remove it, then at end
 % truncate extra
-len = length(datasetData.electrodeData);
-temp = pcadata.data(:,1:len);
+len = length(datasetData.electrodeData); %TODO fix, for now just truncate extra
+pcadata.data = pcadata.data(:,1:len);
 
 pcadata.time =  epochStart:(1/datasetData.sampleRate):epochEnd;
 
