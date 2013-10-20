@@ -299,7 +299,7 @@ pcadata.data = datasetData.dataset;
 sections = datasetData.numberOfSubjects*datasetData.numberOfConditions;
 rowsPerSection = size(pcadata.data, 1)/(sections);
 
-% cut off beginning rows before baseline, do matrix stuff
+% cut off beginning rows before baseline, do matrix stuff, MIGHT REMOVE
 if( datasetData.baseline < 0)
     
     % THIS LINE NEEDS TESTING
@@ -320,7 +320,7 @@ end
 if(rowsPerSection > timeSpan)
     data=[];
     for i=1:sections
-        startRow = ((i-1)*rowsPerSection) + 1;
+        startRow = ((i-1)*rowsPerSection) + epochStart + 1;
         endRow = (startRow + timeSpan);
         tempData = pcadata.data(startRow:endRow, :);
         data=cat(1, data, tempData);
