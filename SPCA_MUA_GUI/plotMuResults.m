@@ -22,7 +22,7 @@ function varargout = plotMuResults(varargin)
 
 % Edit the above text to modify the response to help plotMuResults
 
-% Last Modified by GUIDE v2.5 07-May-2013 16:33:56
+% Last Modified by GUIDE v2.5 24-Oct-2013 10:40:03
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -71,3 +71,47 @@ function varargout = plotMuResults_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
+
+
+% --- Executes on selection change in InputFile_List.
+function InputFile_List_Callback(hObject, eventdata, handles)
+% hObject    handle to InputFile_List (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns InputFile_List contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from InputFile_List
+
+
+% --- Executes during object creation, after setting all properties.
+function InputFile_List_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to InputFile_List (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in SelectFile_Button.
+function SelectFile_Button_Callback(hObject, eventdata, handles)
+% hObject    handle to SelectFile_Button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in PlotVERP_Button.
+function PlotVERP_Button_Callback(hObject, eventdata, handles)
+% hObject    handle to PlotVERP_Button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in PlotConVERPS_Button.
+function PlotConVERPS_Button_Callback(hObject, eventdata, handles)
+% hObject    handle to PlotConVERPS_Button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

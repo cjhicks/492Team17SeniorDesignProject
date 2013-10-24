@@ -22,7 +22,7 @@ function varargout = plotSpcaResults(varargin)
 
 % Edit the above text to modify the response to help plotSpcaResults
 
-% Last Modified by GUIDE v2.5 07-May-2013 16:31:58
+% Last Modified by GUIDE v2.5 24-Oct-2013 10:37:08
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -71,3 +71,54 @@ function varargout = plotSpcaResults_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
+
+
+% --- Executes on button press in RawResults_Button.
+function RawResults_Button_Callback(hObject, eventdata, handles)
+% hObject    handle to RawResults_Button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in PromaxRotation_Button.
+function PromaxRotation_Button_Callback(hObject, eventdata, handles)
+% hObject    handle to PromaxRotation_Button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in VarimaxRotation_Button.
+function VarimaxRotation_Button_Callback(hObject, eventdata, handles)
+% hObject    handle to VarimaxRotation_Button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on selection change in InputFile_List.
+function InputFile_List_Callback(hObject, eventdata, handles)
+% hObject    handle to InputFile_List (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns InputFile_List contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from InputFile_List
+
+
+% --- Executes during object creation, after setting all properties.
+function InputFile_List_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to InputFile_List (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in SelectFiles_Button.
+function SelectFiles_Button_Callback(hObject, eventdata, handles)
+% hObject    handle to SelectFiles_Button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
