@@ -102,7 +102,7 @@ if(~isempty(datasetFileName))
     for i=1:length(datasetData.electrodeData)
         str(i) = cellstr(datasetData.electrodeData(i).labels);
     end
-    set(handles.AllElectrodesList, 'String', str); %TODO, this needs fixed
+    set(handles.AllElectrodesList, 'String', str);
 end
 
 
@@ -230,7 +230,17 @@ function AddButton_Callback(hObject, eventdata, handles)
 % hObject    handle to AddButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+allList = cellstr(get(handles.AllElectrodesList,'String'));
+selected= allList(get(handles.AllElectrodesList,'value'));
 
+addedList = cellstr(get(handles.AddedElectrodesList,'String'));
+if (isequal(addedList,{''}))
+   addedList = selected;
+else
+   addedList = cat(1, addedList, selected); 
+end
+
+set(handles.AddedElectrodesList, 'String', addedList);
 
 % --- Executes on button press in RemoveButton.
 function RemoveButton_Callback(hObject, eventdata, handles)
@@ -238,6 +248,13 @@ function RemoveButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+addedList = cellstr(get(handles.AddedElectrodesList,'String'));
+selected= get(handles.AddedElectrodesList,'value');
+
+addedList(selected) = [];
+
+set(handles.AddedElectrodesList, 'Value', 1);
+set(handles.AddedElectrodesList, 'String', addedList);
 
 % --- Executes on button press in RunParallelAnalysisButton.
 function RunParallelAnalysisButton_Callback(hObject, eventdata, handles)
@@ -337,7 +354,30 @@ pcadata.data = pcadata.data(:,1:len);
 
 pcadata.time =  epochStart:(1/datasetData.sampleRate):epochEnd;
 
+% find channels to include in PCA analysis
+electrodesToAdd = cellstr(get(handles.AddedElectrodesList,'String'));
+ind=0;
+for i=1:len
+    electrode = datasetData.electrodeData(i);
+    for j=1:length(electrodesToAdd)
+        temp = cellstr(electrode.labels)
+        if(isequal(cellstr(electrode.labels), electrodesToAdd(j)))
+            ind = ind + 1;
+            includedChannels(ind) = electrode;
+            electrodeIndices(ind) = i;
+            break;
+        end
+    end
+end
+
+pcadata.data = pcadata.data(:, electrodeIndices);
 
 [STPCAresults]=STPCA(pcadata,datasetData.numberOfSubjects,datasetData.numberOfConditions,0);
-uisave('STPCAresults');
+STPCAresults.chanlocs = includedChannels;%datasetData.electrodeData;
+%STPCAresults.chanlocIndices = electrodeIndices;
+STPCAresults.numberOfSubjects = datasetData.numberOfSubjects;
+STPCAresults.numberOfConditions = datasetData.numberOfConditions;
+STPCAresults.ConditionNames = datasetData.ConditionNames;
 
+STPCAresults.epochTotal = timeSpan+1;
+uisave('STPCAresults');
