@@ -80,7 +80,8 @@ function buildDatasetButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Go to Build Dataset Window
-buildDataset;
+BDSModel = BuildDatasetModel();
+BDSPresenter = BuildDatasetPresenter(BDSModel);
 
 
 % --- Executes on button press in identifyComponentsButton.
@@ -90,7 +91,8 @@ function identifyComponentsButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Go to Identify Components Window
-identifyComponents;
+icModel = SPCAModel();
+icPres = SPCAPresenter(icModel);
 
 
 % --- Executes on button press in plotGrandAverageAllElectrodesButton.
@@ -99,7 +101,9 @@ function plotGrandAverageAllElectrodesButton_Callback(hObject, eventdata, handle
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% TODO: Go to Plot Grand-Averages Window
+% Go to Plot Grand-Averages Window
+PGAModel = PlotGrandAvgModel();
+PGAPresenter = PlotGrandAvgPresenter(PGAModel);
 
 
 % --- Executes on button press in plotSpcaResultsButton.
@@ -109,7 +113,8 @@ function plotSpcaResultsButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Go to Plot SPCA Results Window
-plotSpcaResults;
+PlotSCPAModel = PlotSPCAModel();
+PlotSCPAPresenter = PlotSPCAPresenter(PlotSCPAModel);
 
 
 % --- Executes on button press in runMuaButton.
