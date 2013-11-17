@@ -22,7 +22,7 @@ function varargout = identifyComponents(varargin)
 
 % Edit the above text to modify the response to help identifyComponents
 
-% Last Modified by GUIDE v2.5 03-Nov-2013 12:25:12
+% Last Modified by GUIDE v2.5 17-Nov-2013 10:17:18
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -262,6 +262,12 @@ function NumberSpatialComponentsText_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of NumberSpatialComponentsText as text
 %        str2double(get(hObject,'String')) returns contents of NumberSpatialComponentsText as a double
+numComponents = str2double(get(hObject, 'String'));
+if isnan(numComponents)
+    errordlg('Number of Spatial Components must be a number','Error');
+else
+   handles.presenter.SetNumberSpatialComponents(numComponents);
+end
 
 
 % --- Executes during object creation, after setting all properties.
@@ -291,4 +297,3 @@ function AddAllBtn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles.presenter.AddAllElectrodes();
-

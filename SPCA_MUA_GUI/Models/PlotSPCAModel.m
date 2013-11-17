@@ -39,23 +39,23 @@ classdef PlotSPCAModel < ModelBase
             end
         end
         
-        % Plot Promax rotation for all electrodes in chanlocs
+        % Plot Promax rotation for the retained spatial components
         function doPlotPromax(obj, spcaResults)
-            for channelNum=1:length(spcaResults.chanlocs)
+            for channelNum=1:spcaResults.numberOfSpatialComponents
                 PlotSPCAResultsGenerator.PlotPromaxSPCAResultsByChannel( spcaResults, spcaResults.numberOfSubjects, spcaResults.numberOfConditions, spcaResults.ConditionNames, spcaResults.epochTotal, spcaResults.chanlocs, channelNum );
             end
         end
 
-        % Plot Varimax rotation for all electrodes in chanlocs
+        % Plot Varimax rotation for the retained spatial components
         function doPlotVarimax(obj, spcaResults)
-            for channelNum=1:length(spcaResults.chanlocs)
+            for channelNum=1:spcaResults.numberOfSpatialComponents
                 PlotSPCAResultsGenerator.PlotVarimaxSPCAResultsByChannel( spcaResults, spcaResults.numberOfSubjects, spcaResults.numberOfConditions, spcaResults.ConditionNames, spcaResults.epochTotal, spcaResults.chanlocs, channelNum );
             end
         end
         
-        % Plot Promax rotation for all electrodes in chanlocs
+        % Plot Promax rotation for the retained spatial components
         function doPlotRaw(obj, spcaResults)
-            for channelNum=1:length(spcaResults.chanlocs)
+            for channelNum=1:spcaResults.numberOfSpatialComponents
                 PlotSPCAResultsGenerator.PlotRawSPCAResultsByChannel( spcaResults, spcaResults.numberOfSubjects, spcaResults.numberOfConditions, spcaResults.ConditionNames, spcaResults.epochTotal, spcaResults.chanlocs, channelNum );
             end
         end

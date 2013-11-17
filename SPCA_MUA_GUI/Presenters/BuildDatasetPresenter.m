@@ -56,11 +56,17 @@ classdef BuildDatasetPresenter < PresenterBase
         
         function SelectElectrodeFile(obj)
             % get electrode file
-            [electrodeFileName, electrodeFilePath] = uigetfile('.mat', 'Select the Electrode File');
-            
+            [electrodeFileName, electrodeFilePath] = uigetfile({'*.mat;*.ced;*.elp', 'Electrode Files (*.mat,*.ced,*.elp)';
+                                                                '*.*', 'All Files' },  'Select the Electrode File');
             % update file name string
+            fullFilePath = strcat(electrodeFilePath, electrodeFileName);
+            [pathstr,name,ext] = fileparts(fullFilePath);
             if(~isequal(electrodeFileName,0))
-                electrodeData = load(strcat(electrodeFilePath, electrodeFileName));
+                if(isequal(ext, '.mat'))
+                    electrodeData = load(fullFilePath);
+                else
+                    electrodeData.chanlocs = readlocs(fullFilePath);
+                end
                 obj.model.electrodeData = electrodeData.chanlocs;
                 obj.model.electrodeFileName = electrodeFileName;
             end

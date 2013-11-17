@@ -3,6 +3,7 @@ classdef SPCAPresenter < PresenterBase
     %   Detailed explanation goes here
     
     properties
+        numSpatialCompListener
     end
     
     methods
@@ -18,7 +19,7 @@ classdef SPCAPresenter < PresenterBase
             addlistener(obj.model, 'datasetFileName', 'PostSet', @(src,evnt)obj.RenderDatasetNameText()); 
             addlistener(obj.model, 'datasetData', 'PostSet', @(src,evnt)obj.RenderAllElectrodesListText());
             addlistener(obj.model, 'addedElectrodeList', 'PostSet', @(src,evnt)obj.RenderAddedElectrodesListText());
-            addlistener(obj.model, 'numberOfSpatialComponents', 'PostSet', @(src,evnt)obj.RenderNumSpatialComponents());
+            obj.numSpatialCompListener = addlistener(obj.model, 'numberOfSpatialComponents', 'PostSet', @(src,evnt)obj.RenderNumSpatialComponents());
         end
         
         %%%
@@ -44,9 +45,15 @@ classdef SPCAPresenter < PresenterBase
             obj.model.epochEnd = epochEnd;
         end
         
+        function SetNumberSpatialComponents(obj, numComponents)
+            delete(obj.numSpatialCompListener);
+            obj.model.numberOfSpatialComponents = numComponents;
+            obj.numSpatialCompListener = addlistener(obj.model, 'numberOfSpatialComponents', 'PostSet', @(src,evnt)obj.RenderNumSpatialComponents());
+        end
+        
         % called after pressing add button
         function AddElectrode(obj, selected)
-            if (isequal(obj.model.addedElectrodeList,{''})) % empty list, add first
+            if (isequal(obj.model.addedElectrodeList,{''}) || length(obj.model.addedElectrodeList)==0) % empty list, add first
                 obj.model.addedElectrodeList = selected;
             else % concatentate list
                 obj.model.addedElectrodeList = cat(1, obj.model.addedElectrodeList, selected);
@@ -55,7 +62,9 @@ classdef SPCAPresenter < PresenterBase
         
         % called after pressing remove button
         function RemoveElectrode(obj, selected)
-            obj.model.addedElectrodeList(selected) = [];
+            if(length(obj.model.addedElectrodeList) > 0)
+                obj.model.addedElectrodeList(selected) = [];
+            end
         end
         
         function AddAllElectrodes(obj)

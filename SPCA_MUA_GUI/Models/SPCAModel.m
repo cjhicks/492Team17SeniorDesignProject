@@ -30,12 +30,14 @@ classdef SPCAModel < ModelBase
         end
         
         function RunParallelAnalysis(obj)
-            [obj.numberOfSpatialComponents] = SpcaAlgorithmGenerator.doParallelAnalysis(obj.datasetData.dataset);
+            [includedChannels, electrodeIndices] = obj.getIncludedElectrodes();
+            [obj.numberOfSpatialComponents] = SpcaAlgorithmGenerator.doParallelAnalysis(obj.datasetData.dataset(:, electrodeIndices));
         end
         
         function doScreePlot(obj)
             screedata = struct;
-            screedata.data = obj.datasetData.dataset(:, 1:length(obj.datasetData.electrodeData));
+            [includedChannels, electrodeIndices] = obj.getIncludedElectrodes();
+            screedata.data = obj.datasetData.dataset(:, electrodeIndices);
             screedata.time = length(obj.datasetData.dataset(:,1));
             [screeResults]=SpcaAlgorithmGenerator.STPCA(screedata,obj.datasetData.numberOfSubjects,obj.datasetData.numberOfConditions);
             figure
@@ -49,6 +51,8 @@ classdef SPCAModel < ModelBase
                 errordlg('Please select a correct Epoch Start');
             elseif(isnan(obj.epochEnd) || isinf(obj.epochEnd))
                 errordlg('Please select a correct Epoch End');
+            elseif(isnan(obj.numberOfSpatialComponents) || obj.numberOfSpatialComponents < 1)
+                errordlg('Please determine the Number of Spatial Components. You may use Parallel Analysis and/or Scree Plot to help you determine this number.');
             else
                 pcadata = struct;
                 timeSpan = (obj.epochEnd - obj.epochStart)*obj.datasetData.sampleRate;
@@ -95,19 +99,7 @@ classdef SPCAModel < ModelBase
                 pcadata.time =  obj.epochStart:(1/obj.datasetData.sampleRate):obj.epochEnd;
                 
                 % find channels to include in PCA analysis
-                ind=0;
-                for i=1:len
-                    electrode = obj.datasetData.electrodeData(i);
-                    for j=1:length(obj.addedElectrodeList)
-                        temp = cellstr(electrode.labels)
-                        if(isequal(cellstr(electrode.labels), obj.addedElectrodeList(j)))
-                            ind = ind + 1;
-                            includedChannels(ind) = electrode;
-                            electrodeIndices(ind) = i;
-                            break;
-                        end
-                    end
-                end
+                [includedChannels, electrodeIndices] = obj.getIncludedElectrodes();
                 
                 pcadata.data = pcadata.data(:, electrodeIndices);
                 [STPCAresults]=SpcaAlgorithmGenerator.STPCA(pcadata,obj.datasetData.numberOfSubjects,obj.datasetData.numberOfConditions);
@@ -116,6 +108,7 @@ classdef SPCAModel < ModelBase
                 STPCAresults.numberOfSubjects = obj.datasetData.numberOfSubjects;
                 STPCAresults.numberOfConditions = obj.datasetData.numberOfConditions;
                 STPCAresults.ConditionNames = obj.datasetData.ConditionNames;
+                STPCAresults.numberOfSpatialComponents = obj.numberOfSpatialComponents;
                 
                 STPCAresults.epochTotal = timeSpan+1;
                 
@@ -127,6 +120,23 @@ classdef SPCAModel < ModelBase
                 PlotSCPAModel = PlotSPCAModel();
                 PlotSCPAPresenter = PlotSPCAPresenter(PlotSCPAModel);
                 PlotSCPAPresenter.QuickSelectSPCAResults( pathname, filename )
+            end
+        end
+        
+        function [includedChannels, electrodeIndices] = getIncludedElectrodes(obj)
+            % find channels to include in PCA analysis
+            ind=0;
+            for i=1:length(obj.datasetData.electrodeData)
+                electrode = obj.datasetData.electrodeData(i);
+                for j=1:length(obj.addedElectrodeList)
+                    temp = cellstr(electrode.labels);
+                    if(isequal(cellstr(electrode.labels), obj.addedElectrodeList(j)))
+                        ind = ind + 1;
+                        includedChannels(ind) = electrode;
+                        electrodeIndices(ind) = i;
+                        break;
+                    end
+                end
             end
         end
     end
