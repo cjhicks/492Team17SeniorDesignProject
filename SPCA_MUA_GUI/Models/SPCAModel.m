@@ -45,6 +45,24 @@ classdef SPCAModel < ModelBase
             set(gcf,'numbertitle','off','name','Scree Plot for Dataset');
         end
         
+        function [validated] = ValidateEpoch(obj)
+            if(isnan(obj.epochStart) || isinf(obj.epochStart))
+                errordlg('Please select a correct Epoch Start');
+                validated = 0;
+            elseif(isnan(obj.epochEnd) || isinf(obj.epochEnd))
+                errordlg('Please select a correct Epoch End');
+                validated = 0;
+            elseif(isnan(obj.numberOfSpatialComponents) || obj.numberOfSpatialComponents < 1)
+                errordlg('Please determine the Number of Spatial Components. You may use Parallel Analysis and/or Scree Plot to help you determine this number.');
+                validated = 0;
+            elseif( (length(obj.datasetData.dataset(:,1)')/obj.datasetData.numberOfConditions/obj.datasetData.numberOfSubjects) < obj.epochEnd*obj.datasetData.sampleRate/1000)
+                errordlg('Epoch is too large for this dataset! Please update epoch'); 
+                validated = 0;
+            else
+                validated = 1;
+            end
+        end
+        
         function doRunSPCA(obj)
             
             if(isnan(obj.epochStart) || isinf(obj.epochStart))
@@ -55,7 +73,7 @@ classdef SPCAModel < ModelBase
                 errordlg('Please determine the Number of Spatial Components. You may use Parallel Analysis and/or Scree Plot to help you determine this number.');
             else
                 pcadata = struct;
-                timeSpan = (obj.epochEnd - obj.epochStart)*obj.datasetData.sampleRate;
+                timeSpan = obj.MillisecondsToSamples(obj.epochEnd - obj.epochStart)%(obj.epochEnd - obj.epochStart)*obj.datasetData.sampleRate;
                 pcadata.data = obj.datasetData.dataset;
                 sections = obj.datasetData.numberOfSubjects*obj.datasetData.numberOfConditions;
                 rowsPerSection = size(pcadata.data, 1)/(sections);
@@ -65,6 +83,7 @@ classdef SPCAModel < ModelBase
                     
                     % THIS LINE NEEDS TESTING
                     offset = round((0-obj.datasetData.baseline/1000)*obj.datasetData.sampleRate); % gets x number of rows offset from baseline
+                    offset2 = obj.MillisecondsToSamples(0-obj.datasetData.baseline);
                     
                     data=[];
                     for i=1:sections
@@ -96,7 +115,7 @@ classdef SPCAModel < ModelBase
                 % truncate extra
                 len = length(obj.datasetData.electrodeData); %TODO fix, for now just truncate extra
                 pcadata.data = pcadata.data(:,1:len);
-                pcadata.time =  obj.epochStart:(1/obj.datasetData.sampleRate):obj.epochEnd;
+                pcadata.time =  obj.epochStart:(1000/obj.datasetData.sampleRate):obj.epochEnd;
                 
                 % find channels to include in PCA analysis
                 [includedChannels, electrodeIndices] = obj.getIncludedElectrodes();
@@ -138,6 +157,14 @@ classdef SPCAModel < ModelBase
                     end
                 end
             end
+        end
+        
+        function [samples] = MillisecondsToSamples(obj, ms)
+            samples = (ms*obj.datasetData.sampleRate)/1000;
+        end
+        
+        function [ms] = SamplesToMilliseconds(obj, samples)
+            ms = (1000*samples)/obj.datasetData.sampleRate;
         end
     end
     

@@ -79,7 +79,9 @@ classdef SPCAPresenter < PresenterBase
         end
         
         function RunSPCA(obj)
-            obj.model.doRunSPCA();
+            if obj.model.ValidateEpoch()
+                obj.model.doRunSPCA();
+            end
         end
         
         function RunScreePlot(obj)
