@@ -35,9 +35,10 @@ classdef PlotGrandAvgModel < ModelBase
         % Plots Grand-Averaged Data in a 2D orientation
         function doPlotting(obj, dataset, electrodeData)
                 % Call EEGLab plot function
-                figure
+                figure %('Position', [500,500,671,513]);
                 plottopo(dataset(:, 1:length(electrodeData))', 'chanlocs', electrodeData);
                 set(gcf,'numbertitle','off','name','Grand-Averages');
+                %set(gcf,
         end
         
     end

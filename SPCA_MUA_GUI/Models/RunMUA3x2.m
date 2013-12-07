@@ -1,5 +1,5 @@
 
-function []=RunMUA3x2(PCAresults,F3lab,F3Clab,F2lab,F2Clab,chanlocs, base, epochStartInSamples, epochEndInSamples)
+function []=RunMUA3x2(PCAresults,F3lab,F3Clab,F2lab,F2Clab,chanlocs, base, epochStartInSamples, epochEndInSamples, spatialComponents)
 %ASSUMPTION IS THAT DATA ARE NxChan MATRIX WITH ORGANIZATION:
 %       F2_1-F3_1
 %       F2_2-F3_1
@@ -9,7 +9,7 @@ function []=RunMUA3x2(PCAresults,F3lab,F3Clab,F2lab,F2Clab,chanlocs, base, epoch
 %       F2_2-F3_3
 %
 %example:
-%PCA_MUA_3x2(STPCAresults,'Winner',{'Dealer','Bust','Player'},'Bet',{'large','small'},'chanlocs',EEG.chanlocs);
+%RunMUA3x2(STPCAresults,'Winner',{'Dealer','Bust','Player'},'Bet',{'large','small'},'chanlocs',EEG.chanlocs);
 %for i=1:2:length(varargin)
 %    flag=lower(varargin{i});
 %    arg=varargin{i+1};
@@ -290,7 +290,7 @@ for cond=1:Nconds
         PCAScoreMeans(component,:,cond)=squeeze(mean(temp(component,:,cond:Nconds:size(temp,3)),3));
     end
 end
-for component=1:Ncomps
+for component=1:spatialComponents
     figure
     H1=subplot(2,1,1);
     plot(PCAresults.time,squeeze(PCAScoreMeans(component,:,:))'*1000000,'LineWidth',3)
@@ -393,7 +393,7 @@ end
 if exist('chanlocs')==1
     topofig=figure;
     figdim=ceil(sqrt(Ncomps));
-    for i=1:Ncomps
+    for i=1:spatialComponents
         subplot(figdim,figdim,i)
         topoplot(PCAresults.Spatial.PmxPat(:,i),chanlocs);
     end
