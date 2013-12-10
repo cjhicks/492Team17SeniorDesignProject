@@ -95,6 +95,8 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+global inputDirName;
+global inputDirPath;
 
 % --- Executes on button press in selectFile_Button.
 function selectFile_Button_Callback(hObject, eventdata, handles)
@@ -102,6 +104,14 @@ function selectFile_Button_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% get input directory file
+[inputDirName, inputDirPath] = uigetfile('.txt', 'Select the Input Directory File');
+
+% update file name string
+if(~isequal(inputDirName,0)) 
+    set(handles.inputDirectoryText, 'String', inputDirName);
+   % dataset = doBuildDataset(inputDirPath, inputDirName);
+end
 
 
 function NumSubjectIV_Input_Callback(hObject, eventdata, handles)
