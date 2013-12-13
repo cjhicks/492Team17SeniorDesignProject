@@ -1,5 +1,5 @@
 
-function []=RunMUA3x2(PCAresults,F3lab,F3Clab,F2lab,F2Clab,chanlocs, base, epochStartInSamples, epochEndInSamples, spatialComponents)
+function []=RunMUA3x2(PCAresults,F3lab,F3Clab,F2lab,F2Clab,chanlocs, base, epochStartInSamples, epochEndInSamples, spatialComponents,pcrit, Contiguity)
 %ASSUMPTION IS THAT DATA ARE NxChan MATRIX WITH ORGANIZATION:
 %       F2_1-F3_1
 %       F2_2-F3_1
@@ -9,7 +9,7 @@ function []=RunMUA3x2(PCAresults,F3lab,F3Clab,F2lab,F2Clab,chanlocs, base, epoch
 %       F2_2-F3_3
 %
 %example:
-%RunMUA3x2(STPCAresults,'Winner',{'Dealer','Bust','Player'},'Bet',{'large','small'},'chanlocs',EEG.chanlocs);
+%RunMUA3x2(STPCAresults,'Winner',{'Dealer','Bust','Player'},'Bet',{'large','small'},EEG.chanlocs, 0 , 0, );
 %for i=1:2:length(varargin)
 %    flag=lower(varargin{i});
 %    arg=varargin{i+1};
@@ -27,8 +27,8 @@ baseline = [1 (0-base+1)];
 startA = baseline(2) + epochStartInSamples;
 stopA = baseline(2) + epochEndInSamples;
 
-pcrit=.01;%critical value
-Contiguity=25;%contiguity threshold
+%pcrit=.01;%critical value
+%Contiguity=25;%contiguity threshold
 Nconds=6;% Number of conditions 3x2
 Ncomps=size(PCAresults.Spatial.PmxPat,2);%determine number of retained components from pattern matrix
 Nsubs=size(PCAresults.Spatial.scores,1)/length(PCAresults.time)/6; %determine number of subjects = (length of concatenated data)/(length of epoch)/6 (3x2=6 conditions)

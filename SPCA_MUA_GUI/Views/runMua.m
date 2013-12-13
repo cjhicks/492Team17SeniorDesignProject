@@ -22,7 +22,7 @@ function varargout = runMua(varargin)
 
 % Edit the above text to modify the response to help runMua
 
-% Last Modified by GUIDE v2.5 19-Oct-2013 13:23:54
+% Last Modified by GUIDE v2.5 12-Dec-2013 15:33:56
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -83,6 +83,8 @@ function InputFile_EditText_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from InputFile_EditText
 
 
+
+
 % --- Executes during object creation, after setting all properties.
 function InputFile_EditText_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to InputFile_EditText (see GCBO)
@@ -95,13 +97,26 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
 % --- Executes on button press in selectFile_Button.
 function selectFile_Button_Callback(hObject, eventdata, handles)
 % hObject    handle to selectFile_Button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+global inputDirName;
+global inputDirPath;
+global spcaResults;
+
+% get input directory file
+[inputDirName, inputDirPath] = uigetfile('.txt', 'Select the Input Directory File');
+spcaResults = load(strcat(inputDirPath,inputDirName));
+
+% update file name string
+if(~isequal(inputDirName,0)) 
+    handles = guidata(runMua);
+    set(handles.InputFile_EditText, 'String', inputDirName);
+   % dataset = doBuildDataset(inputDirPath, inputDirName);
+end
 
 
 function NumSubjectIV_Input_Callback(hObject, eventdata, handles)
@@ -134,6 +149,10 @@ function IV1Label_Edit_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of IV1Label_Edit as text
 %        str2double(get(hObject,'String')) returns contents of IV1Label_Edit as a double
+
+global IV1Label;
+
+IV1Label = get(hObject,'String');
 
 
 % --- Executes during object creation, after setting all properties.
@@ -181,6 +200,9 @@ function IV2Label_Edit_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of IV2Label_Edit as text
 %        str2double(get(hObject,'String')) returns contents of IV2Label_Edit as a double
 
+global IV2Label;
+
+IV2Label = get(hObject,'String');
 
 % --- Executes during object creation, after setting all properties.
 function IV2Label_Edit_CreateFcn(hObject, eventdata, handles)
@@ -250,6 +272,9 @@ function Threshold_Input_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of Threshold_Input as text
 %        str2double(get(hObject,'String')) returns contents of Threshold_Input as a double
 
+global Threshold_Input;
+Threshold_Input = str2double(get(hObject,'String'));
+
 
 % --- Executes during object creation, after setting all properties.
 function Threshold_Input_CreateFcn(hObject, eventdata, handles)
@@ -270,6 +295,21 @@ function Run_button_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+global pValueEditTextVar;
+global spcaResults;
+global Threshold_Input;
+
+global IV_1_Level_1;
+global IV_1_Level_2;
+global IV_1_Level_3;
+
+global IV_2_Level_1;
+global IV_2_Level_2;
+
+global IV1Label;
+global IV2Label;
+
+RunMUA3x2(spcaResults.STPCAresults,IV1Label,[IV_1_Level_1,IV_1_Level_2,IV_1_Level_3],IV2Label,[IV_2_Level_1,IV_2_Level_2],spcaResults.STPCAresults.chanlocs, 0, 0, spcaResults.STPCAresults.epochTotal - 1, spcaResults.STPCAresults.numberOfSpatialComponents,pValueEditTextVar, Threshold_Input);
 
 
 function IV_1_Level_1_Label_Edit_Text_Callback(hObject, eventdata, handles)
@@ -279,6 +319,10 @@ function IV_1_Level_1_Label_Edit_Text_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of IV_1_Level_1_Label_Edit_Text as text
 %        str2double(get(hObject,'String')) returns contents of IV_1_Level_1_Label_Edit_Text as a double
+
+global IV_1_Level_1;
+
+IV_1_Level_1 = get(hObject, 'String');
 
 
 % --- Executes during object creation, after setting all properties.
@@ -304,6 +348,11 @@ function IV_1_Level_2_Label_Edit_Text_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of IV_1_Level_2_Label_Edit_Text as a double
 
 
+global IV_1_Level_2;
+
+IV_1_Level_2 = get(hObject, 'String');
+
+
 % --- Executes during object creation, after setting all properties.
 function IV_1_Level_2_Label_Edit_Text_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to IV_1_Level_2_Label_Edit_Text (see GCBO)
@@ -327,6 +376,10 @@ function IV_1_Level_3_Label_Edit_Text_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of IV_1_Level_3_Label_Edit_Text as a double
 
 
+global IV_1_Level_3;
+
+IV_1_Level_3 = get(hObject, 'String');
+
 % --- Executes during object creation, after setting all properties.
 function IV_1_Level_3_Label_Edit_Text_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to IV_1_Level_3_Label_Edit_Text (see GCBO)
@@ -348,6 +401,10 @@ function IV_2_Level_1_Label_Edit_Text_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of IV_2_Level_1_Label_Edit_Text as text
 %        str2double(get(hObject,'String')) returns contents of IV_2_Level_1_Label_Edit_Text as a double
+
+global IV_2_Level_1;
+
+IV_2_Level_1 = get(hObject, 'String');
 
 
 % --- Executes during object creation, after setting all properties.
@@ -372,6 +429,9 @@ function IV_2_Level_2_Label_Edit_Text_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of IV_2_Level_2_Label_Edit_Text as text
 %        str2double(get(hObject,'String')) returns contents of IV_2_Level_2_Label_Edit_Text as a double
 
+global IV_2_Level_2;
+
+IV_2_Level_2 = get(hObject, 'String');
 
 % --- Executes during object creation, after setting all properties.
 function IV_2_Level_2_Label_Edit_Text_CreateFcn(hObject, eventdata, handles)
@@ -395,6 +455,9 @@ function pValueEditText_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of pValueEditText as text
 %        str2double(get(hObject,'String')) returns contents of pValueEditText as a double
 
+global pValueEditTextVar;
+
+pValueEditTextVar = str2double(get(hObject, 'String'));
 
 % --- Executes during object creation, after setting all properties.
 function pValueEditText_CreateFcn(hObject, eventdata, handles)
