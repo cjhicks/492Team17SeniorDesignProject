@@ -238,7 +238,6 @@ addedList = cellstr(get(handles.AddedElectrodesList,'String'));
 selected= get(handles.AddedElectrodesList,'value');
 handles.presenter.RemoveElectrode(selected); % call presenter
 
-
 % --- Executes on button press in RunParallelAnalysisButton.
 function RunParallelAnalysisButton_Callback(hObject, eventdata, handles)
 % hObject    handle to RunParallelAnalysisButton (see GCBO)
