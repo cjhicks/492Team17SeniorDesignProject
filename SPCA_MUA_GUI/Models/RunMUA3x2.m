@@ -20,6 +20,7 @@ function []=RunMUA3x2(PCAresults,F3lab,F3Clab,F2lab,F2Clab,chanlocs, base, epoch
 %end
 %Set-up
 %baseline=[1 101]; %baseline [start stop] (in samples)
+
 baseline = [1 (0-base+1)];
 
 %startA=101;%analyis start time (in samples)
@@ -33,6 +34,11 @@ Nconds=6;% Number of conditions 3x2
 Ncomps=size(PCAresults.Spatial.PmxPat,2);%determine number of retained components from pattern matrix
 Nsubs=size(PCAresults.Spatial.scores,1)/length(PCAresults.time)/6; %determine number of subjects = (length of concatenated data)/(length of epoch)/6 (3x2=6 conditions)
 RMdata=reshape(PCAresults.Spatial.PmxScr',Ncomps,length(PCAresults.time),size(PCAresults.Spatial.scores,1)/length(PCAresults.time));
+
+wBar = waitbar(0, 'Performing Mass Univariate Analysis...');
+wTotal = 7 + size(RMdata,1)*size(RMdata,2);
+wCount = 1;
+
 %baseline correct PCAdata
 for r=1:size(RMdata,1)
     for t=1:size(RMdata,3)
@@ -40,6 +46,10 @@ for r=1:size(RMdata,1)
     end
 end
 PCAresults.Spatial.PmxScr=reshape(RMdata,Ncomps,size(RMdata,2)*size(RMdata,3))';
+
+waitbar(wCount/wTotal);
+wCount = wCount+1;
+
 
 %pre-allocate Factor matrices
 sublist=reshape(repmat([1:Nsubs],6,1),1,Nsubs*6)'; %subject factor
@@ -66,8 +76,18 @@ for component=1:size(RMdata,1)
         F2_P(component,slice)=stats{3,6};
         F3xF2_F(component,slice)=stats{4,5};
         F3xF2_P(component,slice)=stats{4,6};
+        
+        waitbar(wCount/wTotal);
+        wCount = wCount+1;
     end
 end
+
+
+waitbar(wCount/wTotal);
+wCount = wCount+1;
+
+
+
 %Determine FDR-corrected p-value over ALL p-values from ANOVA
 FDRmatrix=[F3xF2_P(:,startA:stopA);F3_P(:,startA:stopA);F2_P(:,startA:stopA)];
 [all_masked, crit_all, adj_p]=fdr_bh(FDRmatrix,pcrit);
@@ -125,6 +145,16 @@ for component=1:size(p_maskedF3xF2,1)
     F3bins{component}=temp;
 end
 
+
+
+
+waitbar(wCount/wTotal);
+wCount = wCount+1;
+
+
+
+
+
 %For each "bin" (group of significant p-values > contiguity threshold) in the omnibus test, find bins for paired contrasts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   F2 Contrasts
@@ -140,6 +170,15 @@ for component=1:Ncomps
         end
     end
 end
+
+
+
+waitbar(wCount/wTotal);
+wCount = wCount+1;
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Winer Contrasts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -160,6 +199,15 @@ for component=1:Ncomps
         end
     end
 end
+
+
+
+waitbar(wCount/wTotal);
+wCount = wCount+1;
+
+
+
+
 %correct contrast p-values for FDR
 F312FDR=F312ContrastsP(~isnan(F312ContrastsP));
 F313FDR=F313ContrastsP(~isnan(F313ContrastsP));
@@ -208,6 +256,16 @@ for component=1:Ncomps
     F323bins{component}=temp; 
 end
 
+
+
+
+waitbar(wCount/wTotal);
+wCount = wCount+1;
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Winer X Bet Contrasts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -228,6 +286,15 @@ for component=1:Ncomps
         end
     end
 end
+
+
+
+waitbar(wCount/wTotal);
+wCount = wCount+1;
+
+
+
+
 %correct for FDR
 F2AtF31FDR=F2AtF31P(~isnan(F2AtF31P));
 F2AtF32FDR=F2AtF32P(~isnan(F2AtF32P));
@@ -276,6 +343,7 @@ for component=1:Ncomps
     F2F33bins{component}=temp; 
 end
 
+close(wBar);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Plot Results 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -390,12 +458,12 @@ for component=1:spatialComponents
     set(gcf,'color','white')
 end
 
-if exist('chanlocs')==1
-    topofig=figure;
-    figdim=ceil(sqrt(Ncomps));
-    for i=1:spatialComponents
-        subplot(figdim,figdim,i)
-        topoplot(PCAresults.Spatial.PmxPat(:,i),chanlocs);
-    end
-end
+%if exist('chanlocs')==1
+%    topofig=figure;
+%    figdim=ceil(sqrt(Ncomps));
+%    for i=1:spatialComponents
+%        subplot(figdim,figdim,i)
+%        topoplot(PCAresults.Spatial.PmxPat(:,i),chanlocs);
+%    end
+%end
 

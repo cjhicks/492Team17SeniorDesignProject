@@ -83,8 +83,6 @@ function InputFile_EditText_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from InputFile_EditText
 
 
-
-
 % --- Executes during object creation, after setting all properties.
 function InputFile_EditText_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to InputFile_EditText (see GCBO)
@@ -108,7 +106,7 @@ global inputDirPath;
 global spcaResults;
 
 % get input directory file
-[inputDirName, inputDirPath] = uigetfile('.txt', 'Select the Input Directory File');
+[inputDirName, inputDirPath] = uigetfile('.mat', 'Select the Spatial PCA Results File');
 spcaResults = load(strcat(inputDirPath,inputDirName));
 
 % update file name string
@@ -273,7 +271,13 @@ function Threshold_Input_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of Threshold_Input as a double
 
 global Threshold_Input;
-Threshold_Input = str2double(get(hObject,'String'));
+value = str2double(get(hObject,'String'));
+if isnan(value)
+    errordlg('Threshold Input must be a number','Error');
+else
+   Threshold_Input = value;
+end
+
 
 
 % --- Executes during object creation, after setting all properties.
@@ -298,19 +302,47 @@ function Run_button_Callback(hObject, eventdata, handles)
 global pValueEditTextVar;
 global spcaResults;
 global Threshold_Input;
-
 global IV_1_Level_1;
 global IV_1_Level_2;
 global IV_1_Level_3;
-
 global IV_2_Level_1;
 global IV_2_Level_2;
-
 global IV1Label;
 global IV2Label;
 
-RunMUA3x2(spcaResults.STPCAresults,IV1Label,[IV_1_Level_1,IV_1_Level_2,IV_1_Level_3],IV2Label,[IV_2_Level_1,IV_2_Level_2],spcaResults.STPCAresults.chanlocs, 0, 0, spcaResults.STPCAresults.epochTotal - 1, spcaResults.STPCAresults.numberOfSpatialComponents,pValueEditTextVar, Threshold_Input);
+validated = ValidateMUAInput();
 
+if (validated)
+    RunMUA3x2(spcaResults.STPCAresults,IV1Label,{IV_1_Level_1,IV_1_Level_2,IV_1_Level_3},IV2Label,{IV_2_Level_1,IV_2_Level_2},spcaResults.STPCAresults.chanlocs, 0, 0, spcaResults.STPCAresults.epochTotal - 1, spcaResults.STPCAresults.numberOfSpatialComponents,pValueEditTextVar, Threshold_Input);
+end
+
+function [valid] = ValidateMUAInput()
+handles = guidata(runMua);
+
+valid = 0;
+if isempty(get(handles.pValueEditText,'String'))
+    errordlg('Please enter your p-value.','Error');
+elseif isempty(get(handles.InputFile_EditText,'String'))
+    errordlg('Please select a sPCA Results file.','Error');
+elseif isempty(get(handles.Threshold_Input,'String'))
+    errordlg('Please enter your Threshold width.','Error');
+elseif isempty(get(handles.IV_1_Level_1_Label_Edit_Text,'String'))
+    errordlg('Please enter your IV 1 Label for Level 1.','Error');
+elseif isempty(get(handles.IV_1_Level_2_Label_Edit_Text,'String'))
+    errordlg('Please enter your IV 1 Label for Level 2.','Error');
+elseif isempty(get(handles.IV_1_Level_3_Label_Edit_Text,'String'))
+    errordlg('Please enter your IV 1 Label for Level 3.','Error');
+elseif isempty(get(handles.IV_2_Level_1_Label_Edit_Text,'String'))
+    errordlg('Please enter your IV 2 Label for Level 1.','Error');
+elseif isempty(get(handles.IV_2_Level_2_Label_Edit_Text,'String'))
+    errordlg('Please enter your IV 2 Label for Level 2.','Error');
+elseif isempty(get(handles.IV1Label_Edit,'String'))
+    errordlg('Please enter your IV 1 Label.','Error');
+elseif isempty(get(handles.IV2Label_Edit,'String'))
+    errordlg('Please enter your IV 2 Label.','Error');
+else
+    valid = 1;
+end
 
 function IV_1_Level_1_Label_Edit_Text_Callback(hObject, eventdata, handles)
 % hObject    handle to IV_1_Level_1_Label_Edit_Text (see GCBO)
@@ -456,8 +488,12 @@ function pValueEditText_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of pValueEditText as a double
 
 global pValueEditTextVar;
-
-pValueEditTextVar = str2double(get(hObject, 'String'));
+value = str2double(get(hObject,'String'));
+if isnan(value)
+    errordlg('p-value must be a number','Error');
+else
+    pValueEditTextVar = value;
+end
 
 % --- Executes during object creation, after setting all properties.
 function pValueEditText_CreateFcn(hObject, eventdata, handles)
