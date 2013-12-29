@@ -47,7 +47,7 @@ classdef PlotGrandAvgModel < ModelBase
       
                 figure 
                 %Call EEGLab plot function
-                plottopo(thirdTemp, 'chanlocs', electrodeData, 'legend', condNames, 'frames', epoch, 'limits', [baseline (epoch*1000/sampleRate)+baseline -0 0]);
+                plottopo(thirdTemp, 'chanlocs', electrodeData, 'legend', condNames, 'frames', epoch, 'limits', [baseline (epoch*1000/sampleRate)+baseline-(1000/sampleRate) -0 0]);
                 %plottopo(dataset(:, 1:length(electrodeData))', 'chanlocs', electrodeData);
                 set(gcf,'numbertitle','off','name','Grand-Averages');
                 %set(gcf,
