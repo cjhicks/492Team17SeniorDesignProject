@@ -26,17 +26,29 @@ classdef PlotGrandAvgModel < ModelBase
                 dataset = load(fullFilePath); % load the dataset
                 
                 % Call EEGLab plot function
-                obj.doPlotting(dataset.dataset, dataset.electrodeData);
+                obj.doPlotting(dataset.dataset, dataset.electrodeData, dataset.numberOfSubjects, dataset.numberOfConditions, dataset.baseline, dataset.sampleRate, dataset.ConditionNames);
             else
                 errordlg('Please check the Dataset file path'); % print error message
             end
         end
         
         % Plots Grand-Averaged Data in a 2D orientation
-        function doPlotting(obj, dataset, electrodeData)
-                % Call EEGLab plot function
-                figure %('Position', [500,500,671,513]);
-                plottopo(dataset(:, 1:length(electrodeData))', 'chanlocs', electrodeData);
+        function doPlotting(obj, dataset, electrodeData, numSubjects, numConditions, baseline, sampleRate, condNames)
+                % Filter dataset by each condition, averaged
+                epoch = length(dataset(:,1))/(numSubjects*numConditions);
+                otherTemp = reshape(dataset', length(electrodeData), epoch, numSubjects*numConditions);
+                thirdTemp = zeros(length(electrodeData), epoch, numConditions);
+                for i=1:numConditions
+                    for j=i:numConditions:(numConditions*numSubjects-numConditions)+i
+                        thirdTemp(:,:,i) = thirdTemp(:,:,i) + otherTemp(:,:, j);
+                    end
+                    thirdTemp(:,:,i) = thirdTemp(:,:,i)/numSubjects;
+                end
+      
+                figure 
+                %Call EEGLab plot function
+                plottopo(thirdTemp, 'chanlocs', electrodeData, 'legend', condNames, 'frames', epoch, 'limits', [baseline (epoch*1000/sampleRate)+baseline -0 0]);
+                %plottopo(dataset(:, 1:length(electrodeData))', 'chanlocs', electrodeData);
                 set(gcf,'numbertitle','off','name','Grand-Averages');
                 %set(gcf,
         end

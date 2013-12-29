@@ -25,8 +25,8 @@ classdef PlotSPCAResultsGenerator
             plot(STPCAresults.time,squeeze(ConditionAvgs(channelNum,:,:)),'linewidth',3)
             axis tight
             legend(conditionlabels)
-            title(['Channel: ', chanlocs(channelNum).labels])
-            set(gcf,'numbertitle','off','name',['Promax Rotation for ', chanlocs(channelNum).labels])
+            %title(['Channel: ', chanlocs(channelNum).labels])
+            set(gcf,'numbertitle','off','name',['Promax Rotation ', int2str(channelNum)])
         end
         
         % Plots Varimax Results By Channel
@@ -47,8 +47,8 @@ classdef PlotSPCAResultsGenerator
             plot(STPCAresults.time,squeeze(ConditionAvgs(channelNum,:,:)),'linewidth',3)
             axis tight
             legend(conditionlabels)
-            title(['Channel: ', chanlocs(channelNum).labels])
-            set(gcf,'numbertitle','off','name',['Varimax Rotation for ', chanlocs(channelNum).labels])
+            %title(['Channel: ', chanlocs(channelNum).labels])
+            set(gcf,'numbertitle','off','name',['Varimax Rotation ', int2str(channelNum)])
         end
         
         % Plots Raw resuts by channel
@@ -69,8 +69,8 @@ classdef PlotSPCAResultsGenerator
             plot(STPCAresults.time,squeeze(ConditionAvgs(channelNum,:,:)),'linewidth',3)
             axis tight
             legend(conditionlabels)
-            title(['Channel: ', chanlocs(channelNum).labels])
-            set(gcf,'numbertitle','off','name',['Raw Results for ', chanlocs(channelNum).labels])
+            %title(['Number: ', channelNum])
+            set(gcf,'numbertitle','off','name',['Raw Results ', int2str(channelNum)])
         end
 
     end
